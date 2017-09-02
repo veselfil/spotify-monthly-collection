@@ -7,5 +7,8 @@
 #     print(' ', i, t['name'], t['uri'])
 
 from spotify.data_collector import get_top_songs
+from spotify.spotify import get_authenticated_instance
 
-top_songs = get_top_songs(50)
+spotify = get_authenticated_instance()
+
+top_songs = get_top_songs(50, "short_term")
