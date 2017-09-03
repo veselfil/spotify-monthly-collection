@@ -11,7 +11,7 @@ months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", 
 
 def get_playlist_name():
     now = datetime.now()
-    return "%s %s" % (months[now.month - 1], str(now.year))
+    return "%s %s" % (months[now.month - 2], str(now.year))
 
 
 def log(line, is_error=False):
