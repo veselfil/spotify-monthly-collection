@@ -1,15 +1,9 @@
-# from spotify import spotify
-# spotify = spotify.get_authenticated_instance()
-#
-# results = spotify.current_user_top_tracks(limit=50, time_range='long_term')
-# print (results)
-# for i, t in enumerate(results['items']):
-#     print(' ', i, t['name'], t['uri'])
+import sys
 
 from spotify.data_collector import get_top_songs
 from spotify.playlists import create_playlist
 from config import USER
-from spotify.spotify import get_authenticated_instance
+from spotify.spotify import get_authenticated_instance, SpotifyAuthException
 from datetime import datetime
 
 months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -20,6 +14,19 @@ def get_playlist_name():
     return "%s %s" % (months[now.month - 1], str(now.year))
 
 
-spotify = get_authenticated_instance()
+def log(line, is_error=False):
+    with open("log.txt", "a") as file:
+        file.write("[" + str(datetime.now()) + "]: " + ("ERROR: " if is_error else "") + line + "\n")
+
+
+try:
+    spotify = get_authenticated_instance()
+    log("Logged in successfully...")
+except SpotifyAuthException:
+    log("Failed to login to Spotify!", True)
+    sys.exit(0)
+
 top_songs = get_top_songs(spotify, 50, "short_term")
 create_playlist(spotify, USER, get_playlist_name(), top_songs)
+
+log("Successfully created a playlist with " + str(len(top_songs)) + " songs")
